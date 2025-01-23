@@ -6,10 +6,14 @@
 
 {% block main %}
     <h1>Dashboard.</h1>
+    <h3>Welcome back, {{user[0] + " " + user[1]}}.</h3>
 
-    {% for u in user %}
-        <p>{{u}}</p>
+    <!-- MINI PROFILE -->
+
+    {% for record in records %}
+        <div class="record">
+            <p>{{record}}</p>
+        </div>
     {% endfor %}
-    <p>{{age}}</p>
 
 {% endblock %}

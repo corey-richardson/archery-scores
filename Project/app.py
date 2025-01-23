@@ -11,16 +11,12 @@ from archeryutils import classifications as class_func
 
 from helpers import login_required
 
-# Configure application
 app = Flask(__name__)
-# Ensure templates are auto-reloaded
 app.config["TEMPLATES_AUTO_RELOAD"] = True
-# Configure session to use filesystem (instead of signed cookies)
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
-# Connect to SQLite database
 db_path = "./static/database.db"
 conn = sqlite3.connect(db_path, check_same_thread=False)
 db = conn.cursor()
@@ -71,8 +67,12 @@ def index():
             case "Female U21":
                 db.execute("UPDATE Archer SET default_category = 'Female' WHERE archer_id = ?", str(session["user_id"]))                
 
+    records = db.execute("SELECT * FROM Record INNER JOIN RecordDetails ON Record.record_id = RecordDetails.record_id WHERE archer_id = ?",
+                         str(session["user_id"]))
+
     return render_template("index.html",
-                           user=user, age=age)
+                           user=user, age=age,
+                           records=records)
 
 @app.route("/failure")
 def failure():
@@ -108,9 +108,7 @@ def login():
 @app.route("/logout")
 def logout():
     """Log user out"""
-    # Forget any user_id
     session.clear()
-    # Redirect user to login form
     return redirect("/login")
 
 
@@ -206,8 +204,6 @@ def submit():
     event_types = db.execute(
         "SELECT * FROM EventType"
     ).fetchall()
-    
-    
     
     return render_template("submit.html", 
                            rounds=all_round_objects, 
