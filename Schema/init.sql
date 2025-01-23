@@ -10,6 +10,22 @@ CREATE TABLE IF NOT EXISTS "Archer" (
     "default_bowstyle" INT NOT NULL REFERENCES "Bowstyles.bowstyle_id"
 );
 
+
+DROP TABLE IF EXISTS "Roles";
+CREATE TABLE IF NOT EXISTS "Roles" (
+    "role_id" INTEGER PRIMARY KEY,
+    "role_name" TEXT NOT NULL UNIQUE
+);
+
+
+DROP TABLE IF EXISTS "ArcherRoles";
+CREATE TABLE IF NOT EXISTS "ArcherRoles" (
+    "archer_id" INTEGER NOT NULL REFERENCES "Archer.archer_id",
+    "role_id" INTEGER NOT NULL REFERENCES "Roles.role_id",
+    PRIMARY KEY (archer_id, role_id)
+); 
+
+
 DROP TABLE IF EXISTS "ArcherAwards";
 CREATE TABLE IF NOT EXISTS "ArcherAwards" (
     "archer_id" INTEGER PRIMARY KEY REFERENCES "Archer.archer_id",
@@ -80,6 +96,13 @@ CREATE TABLE IF NOT EXISTS "RecordDetails" (
 );
 
 -- SEED
+
+INSERT INTO "Roles" ("role_name") 
+VALUES 
+    ('User'), 
+    ('Records Officer'), 
+    ('Admin');
+
 
 INSERT INTO "EventType" ("event_type_name")
 VALUES 

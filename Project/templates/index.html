@@ -6,4 +6,10 @@
 
 {% block main %}
     <h1>Dashboard.</h1>
+
+    {% for u in user %}
+        <p>{{u}}</p>
+    {% endfor %}
+    <p>{{age}}</p>
+
 {% endblock %}

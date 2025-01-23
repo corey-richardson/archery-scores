@@ -23,30 +23,54 @@ db_path = "./static/database.db"
 conn = sqlite3.connect(db_path, check_same_thread=False)
 db = conn.cursor()
 
-# if __name__ == "__main__":
-#     conn = sqlite3.connect(db_path)
-#     cursor = conn.cursor()
-#     password =  generate_password_hash("password")
-#     cursor.execute("""
-#         INSERT INTO Archer (first_name,
-#                             last_name,
-#                             username,
-#                             password,
-#                             birth_date,
-#                             default_category,
-#                             default_bowstyle) 
-#         VALUES (
-#             'TEST', 'USER', 'TEST-USER', ?, '2024-08-06', 1, 2
-#         );
-#     """, (password,))
+if __name__ == "__main__":
+    conn = sqlite3.connect(db_path)
+    cursor = conn.cursor()
+    password =  generate_password_hash("password")
+    cursor.execute("""
+        INSERT INTO Archer (first_name,
+                            last_name,
+                            username,
+                            password,
+                            birth_date,
+                            default_category,
+                            default_bowstyle) 
+        VALUES (
+            'TEST', 'USER', 'TEST-USER', ?, '2004-08-06', 1, 2
+        );
+    """, (password,))
     
-#     conn.commit()
-#     print("Test user created successfully.")
+    cursor.execute("""
+        INSERT INTO ArcherRoles (archer_id, role_id)
+        VALUES
+            (1, 1),
+            (1, 2),
+            (1, 3);               
+    """)
+    
+    conn.commit()
+    print("Test user created successfully.")
 
 @app.route("/")
 @login_required
 def index():
-    return render_template("index.html")
+    user = db.execute(
+        "SELECT first_name, last_name, username, birth_date, default_category, default_bowstyle FROM Archer WHERE archer_id = ?", 
+        str(session["user_id"])
+    ).fetchone()
+    
+    birth_year = int(user[3].split('-')[0])
+    current_year = date.today().year
+    age = current_year - birth_year
+    if age >= 21:
+        match (user[4]):
+            case "Male U21":
+                db.execute("UPDATE Archer SET default_category = 'Male' WHERE archer_id = ?", str(session["user_id"]))                
+            case "Female U21":
+                db.execute("UPDATE Archer SET default_category = 'Female' WHERE archer_id = ?", str(session["user_id"]))                
+
+    return render_template("index.html",
+                           user=user, age=age)
 
 @app.route("/failure")
 def failure():
@@ -91,12 +115,12 @@ def logout():
 @app.route("/submit", methods=["get","post"])
 @login_required
 def submit():
-    user_defaults = list(db.execute(
+    today = date.today().strftime('%Y-%m-%d')
+    
+    user_defaults = db.execute(
         "SELECT default_bowstyle, default_category FROM Archer WHERE archer_id = ?", 
         str(session["user_id"])
-    ))[0]
-    print(user_defaults)
-    today = date.today().strftime('%Y-%m-%d')
+    ).fetchone()
     
     agb_outdoor_imperial = load_rounds.AGB_outdoor_metric
     agb_outdoor_metric = load_rounds.AGB_outdoor_metric
@@ -104,17 +128,17 @@ def submit():
     wa_indoors = load_rounds.WA_indoor
     unofficial = load_rounds.misc
     
-    bowstyles = list(db.execute(
+    bowstyles = db.execute(
         "SELECT * FROM Bowstyles"
-    ))
+    ).fetchall()
     
-    categories = list(db.execute(
+    categories = db.execute(
         "SELECT * FROM Categories"
-    ))
+    ).fetchall()
     
-    event_types = list(db.execute(
+    event_types = db.execute(
         "SELECT * FROM EventType"
-    ))
+    ).fetchall()
     
     rounds = {**agb_indoors, **wa_indoors, **agb_outdoor_imperial, **agb_outdoor_metric, **unofficial}
     
