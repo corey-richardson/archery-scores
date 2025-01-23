@@ -1,6 +1,6 @@
 DROP TABLE IF EXISTS "Archer";
 CREATE TABLE IF NOT EXISTS "Archer" (
-    "archer_id" INT PRIMARY KEY,
+    "archer_id" INTEGER PRIMARY KEY,
     "first_name" TEXT NOT NULL,
     "last_name" TEXT NOT NULL,
     "username" TEXT NOT NULL UNIQUE,
@@ -15,13 +15,13 @@ CREATE TABLE IF NOT EXISTS "Archer" (
 
 DROP TABLE IF EXISTS "ArcherAwards";
 CREATE TABLE IF NOT EXISTS "ArcherAwards" (
-    "archer_id" INT PRIMARY KEY REFERENCES "Archer.archer_id",
-    "handicap" INT,
-    "classification" INT REFERENCES "Classifications.classification_id",
-    "classification_badge" INT REFERENCES "Classifications.classification_id",
-    "portsmouth_badge" INT,
-    "worcester_badge" INT,
-    "frostbite_badge" INT, 
+    "archer_id" INTEGER PRIMARY KEY REFERENCES "Archer.archer_id",
+    "handicap" INTEGER,
+    "classification" INTEGER REFERENCES "Classifications.classification_id",
+    "classification_badge" INTEGER REFERENCES "Classifications.classification_id",
+    "portsmouth_badge" INTEGER,
+    "worcester_badge" INTEGER,
+    "frostbite_badge" INTEGER, 
 
     CHECK ("handicap" BETWEEN -1 AND 150)
 );
@@ -29,35 +29,35 @@ CREATE TABLE IF NOT EXISTS "ArcherAwards" (
 
 DROP TABLE IF EXISTS "EventType";
 CREATE TABLE IF NOT EXISTS "EventType" (
-    "event_type_id" INT PRIMARY KEY,
+    "event_type_id" INTEGER PRIMARY KEY AUTOINCREMENT,
     "event_type_name" TEXT NOT NULL
 );
 
 
 DROP TABLE IF EXISTS "Bowstyles";
 CREATE TABLE IF NOT EXISTS "Bowstyles" (
-    "bowstyle_id" INT PRIMARY KEY,
+    "bowstyle_id" INTEGER PRIMARY KEY,
     "bowstyle_name" TEXT NOT NULL UNIQUE
 );
 
 
 DROP TABLE IF EXISTS "Classifications";
 CREATE TABLE IF NOT EXISTS "Classifications" (
-    "classification_id" INT PRIMARY KEY,
+    "classification_id" INTEGER PRIMARY KEY,
     "classification_string" TEXT NOT NULL UNIQUE
 );
 
 
 DROP TABLE IF EXISTS "Record";
 CREATE TABLE IF NOT EXISTS "Record" (
-    "record_id" INT PRIMARY KEY,
-    "archer_id" INT REFERENCES "Archer.archer_id",
+    "record_id" INTEGER PRIMARY KEY,
+    "archer_id" INTEGER REFERENCES "Archer.archer_id",
     "round_name" TEXT NOT NULL,
     "date_shot" TEXT NOT NULL,
     "event_name" TEXT,
     "event_type" REFERENCES "EventType.event_type_id",
-    "round_handicap" INT DEFAULT -1,
-    "round_classification" INT REFERENCES "Classifications.classification_id",
+    "round_handicap" INTEGER DEFAULT -1,
+    "round_classification" INTEGER REFERENCES "Classifications.classification_id",
     "notes" TEXT,
     CHECK ("round_handicap" BETWEEN -1 AND 150)
 );
@@ -68,18 +68,18 @@ CREATE TABLE IF NOT EXISTS "RecordDetails" (
     "record_id" PRIMARY KEY REFERENCES "Record.record_id",
     "dozens" REAL NOT NULL,
     "cumulative_dozens" REAL,
-    "score" INT NOT NULL,
-    "xs" INT DEFAULT 0,
-    "tens" INT DEFAULT 0,
-    "golds" INT DEFAULT 0,
-    "hits" INT DEFAULT 0
+    "score" INTEGER NOT NULL,
+    "xs" INTEGER DEFAULT 0,
+    "tens" INTEGER DEFAULT 0,
+    "golds" INTEGER DEFAULT 0,
+    "hits" INTEGER DEFAULT 0
 );
 
 -- SEED
 
 INSERT INTO "EventType" ("event_type_name")
 VALUES 
-    ('Club Practice'), 
+    ('Club Practice Session'), 
     ('Club Target Day'), 
     ('Club Competition'),
     ('Open Competition'),
@@ -105,4 +105,3 @@ VALUES
     ('Indoor Master Bowman'),
     ('Indoor Grand Master Bowman');
     -- OUTDOOR CLASSIFICATIONS
-    
