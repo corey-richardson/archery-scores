@@ -1,10 +1,13 @@
 import sqlite3
 from datetime import date
 
-from flask import Flask, render_template
+from flask import Flask, redirect, render_template, request, session, url_for
 from flask_session import Session
+from werkzeug.security import check_password_hash, generate_password_hash
+
 from archeryutils import load_rounds
 
+from helpers import login_required
 
 # Configure application
 app = Flask(__name__)
@@ -22,10 +25,52 @@ db = conn.cursor()
 
 
 @app.route("/")
+@login_required
 def index():
     return render_template("index.html")
 
+@app.route("/failure")
+def failure():
+    error_message = request.args.get("ERR_MSG", "Undefined Error.")
+    return render_template("failure.html", ERR_MSG=error_message)
+
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    session.clear()
+
+    if request.method == "POST":
+        if not request.form.get("username"):
+             return redirect(url_for("failure", ERR_MSG="Username field was left empty."))
+        if not request.form.get("password"):
+            return redirect(url_for("failure", ERR_MSG="Password field was left empty."))
+
+        users = db.execute(
+            "SELECT * FROM Archer WHERE username = ?",
+            (request.form.get("username"),)
+        ).fetchall()
+        
+        print(users)
+
+        if len(users) != 1 or not check_password_hash(users[0][4], request.form.get("password")):
+            return redirect(url_for("failure", ERR_MSG="Username or password invalid!"))
+
+        session["user_id"] = users[0][0]
+        return redirect("/")
+
+    return render_template("login.html")
+
+
+@app.route("/logout")
+def logout():
+    """Log user out"""
+    # Forget any user_id
+    session.clear()
+    # Redirect user to login form
+    return redirect("/login")
+
+
 @app.route("/submit", methods=["get","post"])
+@login_required
 def submit():
     today = date.today().strftime('%Y-%m-%d')
     
@@ -49,3 +94,4 @@ def submit():
                            rounds=rounds, 
                            today=today,
                            bowstyles=bowstyles, event_types=event_types)
+    
