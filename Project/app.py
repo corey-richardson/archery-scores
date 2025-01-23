@@ -1,4 +1,6 @@
 import sqlite3
+from datetime import date
+
 from flask import Flask, render_template
 from flask_session import Session
 from archeryutils import load_rounds
@@ -25,6 +27,7 @@ def index():
 
 @app.route("/submit", methods=["get","post"])
 def submit():
+    today = date.today().strftime('%Y-%m-%d')
     
     agb_outdoor_imperial = load_rounds.AGB_outdoor_metric
     agb_outdoor_metric = load_rounds.AGB_outdoor_metric
@@ -44,4 +47,5 @@ def submit():
     
     return render_template("submit.html", 
                            rounds=rounds, 
+                           today=today,
                            bowstyles=bowstyles, event_types=event_types)

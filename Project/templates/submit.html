@@ -6,7 +6,7 @@
 
 {% block main %}
 
-<h2>Submit a new score to the Records Officer</h2>
+<h2>Submit a new score to the Records Officer.</h2> <br>
 
 <form action="/submit" method="post">
     <div class="row mb-3">
@@ -38,6 +38,12 @@
         </div>
 
         <div class="col">
+            <input type="date" id="date_shot" name="date_shot" class="form-control" required value="{{ today }}">
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col">
             <select class="form-select mx-auto w-auto" name="event_type" required>
                 <option selected disabled hidden>Event Type</option>
                 {% for event_type in event_types %}
@@ -45,15 +51,39 @@
                 {% endfor %}
             </select>
         </div>
+
+        <div class="col">
+            <input autocomplete="off" class="form-control mx-auto w-auto" name="event_name" placeholder="Event Name" type="text">
+        </div>
     </div>
 
     <div class="row mb-3">
         <div class="col">
-            <input type="date" id="date_shot" name="date_shot" class="form-control" required>
+            <input autocomplete="off" class="form-control mx-auto w-auto" name="score" placeholder="Score" type="number" min="0" step="1" required>
         </div>
 
         <div class="col">
-            
+            <input autocomplete="off" class="form-control mx-auto w-auto" name="hits" placeholder="Hits" type="number" min="0" step="1" required>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col">
+            <input autocomplete="off" class="form-control mx-auto w-auto" name="xs" placeholder="Xs" type="number" min="0" step="1">
+        </div>
+
+        <div class="col">
+            <input autocomplete="off" class="form-control mx-auto w-auto" name="tens" placeholder="Tens" type="number" min="0" step="1">
+        </div>
+
+        <div class="col">
+            <input autocomplete="off" class="form-control mx-auto w-auto" name="golds" placeholder="Golds" type="number" min="0" step="1">
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col">
+            <input autocomplete="off" class="form-control mx-auto w-auto" name="notes" placeholder="Notes" type="textarea" rows="10">
         </div>
     </div>
 

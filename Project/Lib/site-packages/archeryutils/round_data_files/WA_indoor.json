@@ -1,0 +1,60 @@
+[
+  {"name" : "WA 18m",
+   "codename" : "wa18",
+   "location" : "indoor",
+   "body" : "WA",
+   "passes" : [{"n_arrows" : 30, "diameter" : 40, "scoring" : "10_zone", "distance" : 18, "dist_unit" : "metre"},
+               {"n_arrows" : 30, "diameter" : 40, "scoring" : "10_zone", "distance" : 18, "dist_unit" : "metre"}]
+  },
+  {"name" : "WA 18m Compound",
+   "codename" : "wa18_compound",
+   "location" : "indoor",
+   "body" : "WA",
+   "passes" : [{"n_arrows" : 30, "diameter" : 40, "scoring" : "10_zone_compound", "distance" : 18, "dist_unit" : "metre"},
+               {"n_arrows" : 30, "diameter" : 40, "scoring" : "10_zone_compound", "distance" : 18, "dist_unit" : "metre"}]
+  },
+  {"name" : "WA 18m Triple",
+   "codename" : "wa18_triple",
+   "location" : "indoor",
+   "body" : "WA",
+   "passes" : [{"n_arrows" : 30, "diameter" : 40, "scoring" : "10_zone_5_ring", "distance" : 18, "dist_unit" : "metre"},
+               {"n_arrows" : 30, "diameter" : 40, "scoring" : "10_zone_5_ring", "distance" : 18, "dist_unit" : "metre"}]
+  },
+  {"name" : "WA 18m Compound Triple",
+   "codename" : "wa18_compound_triple",
+   "location" : "indoor",
+   "body" : "WA",
+   "passes" : [{"n_arrows" : 30, "diameter" : 40, "scoring" : "10_zone_5_ring_compound", "distance" : 18, "dist_unit" : "metre"},
+               {"n_arrows" : 30, "diameter" : 40, "scoring" : "10_zone_5_ring_compound", "distance" : 18, "dist_unit" : "metre"}]
+  },
+
+
+  {"name" : "WA 25m",
+   "codename" : "wa25",
+   "location" : "indoor",
+   "body" : "WA",
+   "passes" : [{"n_arrows" : 30, "diameter" : 60, "scoring" : "10_zone", "distance" : 25, "dist_unit" : "metre"},
+               {"n_arrows" : 30, "diameter" : 60, "scoring" : "10_zone", "distance" : 25, "dist_unit" : "metre"}]
+  },
+  {"name" : "WA 25m Compound",
+   "codename" : "wa25_compound",
+   "location" : "indoor",
+   "body" : "WA",
+   "passes" : [{"n_arrows" : 30, "diameter" : 60, "scoring" : "10_zone_compound", "distance" : 25, "dist_unit" : "metre"},
+               {"n_arrows" : 30, "diameter" : 60, "scoring" : "10_zone_compound", "distance" : 25, "dist_unit" : "metre"}]
+  },
+  {"name" : "WA 25m Triple",
+   "codename" : "wa25_triple",
+   "location" : "indoor",
+   "body" : "WA",
+   "passes" : [{"n_arrows" : 30, "diameter" : 60, "scoring" : "10_zone_5_ring", "distance" : 25, "dist_unit" : "metre"},
+               {"n_arrows" : 30, "diameter" : 60, "scoring" : "10_zone_5_ring", "distance" : 25, "dist_unit" : "metre"}]
+  },
+  {"name" : "WA 25m Compound Triple",
+   "codename" : "wa25_compound_triple",
+   "location" : "indoor",
+   "body" : "WA",
+   "passes" : [{"n_arrows" : 30, "diameter" : 60, "scoring" : "10_zone_5_ring_compound", "distance" : 25, "dist_unit" : "metre"},
+               {"n_arrows" : 30, "diameter" : 60, "scoring" : "10_zone_5_ring_compound", "distance" : 25, "dist_unit" : "metre"}]
+  }
+]

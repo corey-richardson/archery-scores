@@ -1,0 +1,13 @@
+{
+  "location": "outdoor",
+  "classes" : ["EMB", "GMB", "MB", "B1", "B2", "B3", "A1", "A2", "A3"],
+  "classes_long" : ["Elite Master Bowman",
+                    "Grand Master Bowman",
+                    "Master Bowman",
+                    "Bowman 1st Class",
+                    "Bowman 2nd Class",
+                    "Bowman 3rd Class",
+                    "Archer 1st Class",
+                    "Archer 2nd Class",
+                    "Archer 3rd Class"]
+}
