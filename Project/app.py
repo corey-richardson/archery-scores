@@ -134,9 +134,9 @@ def submit():
         event_name = request.form.get("event_name")
         score = request.form.get("score")
         hits = request.form.get("hits")
-        xs = request.form.get("xs")
-        tens = request.form.get("tens")
-        golds = request.form.get("golds")
+        xs = request.form.get("xs") or 0
+        tens = request.form.get("tens") or 0
+        golds = request.form.get("golds") or 0
         notes = request.form.get("notes")
                         
         category = db.execute("SELECT category_name FROM Categories WHERE category_id = ?", category).fetchone()[0]
@@ -151,9 +151,7 @@ def submit():
             "AGB",
             int_prec=True
         ))
-        
-        print(round_handicap)
-        
+            
         round_classification = class_func.calculate_agb_indoor_classification(
             int(score),
             round_name,
@@ -161,11 +159,34 @@ def submit():
             sex,
             age
         )
+
+        dozens = sum(pass_i.n_arrows for pass_i in vars(all_round_objects[round_name])['passes']) / 12
         
-        print(round_classification)
+        cumulative_dozens = db.execute("""
+            SELECT 
+                SUM(dozens)
+            FROM
+                Record
+            INNER JOIN
+                RecordDetails ON Record.record_id = RecordDetails.record_id  
+            WHERE
+                Record.archer_id = ? AND
+                Record.round_classification = ?;                          
+        """, (str(session["user_id"]), round_classification,)).fetchone()[0] or 0
         
-        dozens = ...
-        cumulative_dozens = ...
+        db.execute("""
+            INSERT INTO Record (archer_id, round_name, date_shot, event_name, event_type, round_handicap, round_classification, notes)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        """, (str(session["user_id"]), all_round_objects[round_name].name, date_shot, event_name, event_type, round_handicap, round_classification, notes,))
+
+        record_id = db.execute("SELECT last_insert_rowid()").fetchone()[0]
+
+        db.execute("""
+            INSERT INTO RecordDetails (record_id, dozens, cumulative_dozens, score, xs, tens, golds, hits)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        """, (record_id, dozens, cumulative_dozens+dozens, int(score), int(xs), int(tens), int(golds), int(hits),))
+
+        db.connection.commit()
     
     today = date.today().strftime('%Y-%m-%d')
     
