@@ -23,6 +23,25 @@ db_path = "./static/database.db"
 conn = sqlite3.connect(db_path, check_same_thread=False)
 db = conn.cursor()
 
+# if __name__ == "__main__":
+#     conn = sqlite3.connect(db_path)
+#     cursor = conn.cursor()
+#     password =  generate_password_hash("password")
+#     cursor.execute("""
+#         INSERT INTO Archer (first_name,
+#                             last_name,
+#                             username,
+#                             password,
+#                             birth_date,
+#                             default_category,
+#                             default_bowstyle) 
+#         VALUES (
+#             'TEST', 'USER', 'TEST-USER', ?, '2024-08-06', 1, 2
+#         );
+#     """, (password,))
+    
+#     conn.commit()
+#     print("Test user created successfully.")
 
 @app.route("/")
 @login_required
@@ -72,6 +91,11 @@ def logout():
 @app.route("/submit", methods=["get","post"])
 @login_required
 def submit():
+    user_defaults = list(db.execute(
+        "SELECT default_bowstyle, default_category FROM Archer WHERE archer_id = ?", 
+        str(session["user_id"])
+    ))[0]
+    print(user_defaults)
     today = date.today().strftime('%Y-%m-%d')
     
     agb_outdoor_imperial = load_rounds.AGB_outdoor_metric
@@ -84,6 +108,10 @@ def submit():
         "SELECT * FROM Bowstyles"
     ))
     
+    categories = list(db.execute(
+        "SELECT * FROM Categories"
+    ))
+    
     event_types = list(db.execute(
         "SELECT * FROM EventType"
     ))
@@ -93,5 +121,6 @@ def submit():
     return render_template("submit.html", 
                            rounds=rounds, 
                            today=today,
-                           bowstyles=bowstyles, event_types=event_types)
+                           bowstyles=bowstyles, categories=categories, event_types=event_types,
+                           default_bowstyle=user_defaults[0], default_category=user_defaults[1])
     

@@ -14,15 +14,16 @@
             <select class="form-select" name="bowstyle" required>
                 <option selected disabled hidden>Bowstyle</option>
                 {% for bowstyle in bowstyles %}
-                    <option value="{{ bowstyle[0] }}">{{ bowstyle[1] }}</option>
+                    <option value="{{ bowstyle[0] }}" {% if bowstyle[0] == default_bowstyle %}selected{% endif %}>{{ bowstyle[1] }}</option>
                 {% endfor %}
             </select>
         </div>
         <div class="col">
-            <select class="form-select" name="sex" required>
-                <option selected disabled hidden>Sex</option>
-                <option value="Male">Male</option>
-                <option value="Female">Female</option>
+            <select class="form-select" name="category" required>
+                <option selected disabled hidden>Category</option>
+                {% for category in categories %}
+                    <option value="{{ category[0] }}" {% if category[0] == default_category %}selected{% endif %}>{{ category[1] }}</option>
+                {% endfor %}
             </select>
         </div>
     </div>

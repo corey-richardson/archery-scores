@@ -6,12 +6,9 @@ CREATE TABLE IF NOT EXISTS "Archer" (
     "username" TEXT NOT NULL UNIQUE,
     "password" TEXT NOT NULL,
     "birth_date" TEXT NOT NULL,
-    "default_sex" TEXT NOT NULL,
-    "default_bowstyle" TEXT NOT NULL,
-
-    CHECK ("default_sex" IN ('Male', 'Female'))
+    "default_category" INT NOT NULL REFERENCES "Categories.category_id",
+    "default_bowstyle" INT NOT NULL REFERENCES "Bowstyles.bowstyle_id"
 );
-
 
 DROP TABLE IF EXISTS "ArcherAwards";
 CREATE TABLE IF NOT EXISTS "ArcherAwards" (
@@ -38,6 +35,13 @@ DROP TABLE IF EXISTS "Bowstyles";
 CREATE TABLE IF NOT EXISTS "Bowstyles" (
     "bowstyle_id" INTEGER PRIMARY KEY,
     "bowstyle_name" TEXT NOT NULL UNIQUE
+);
+
+
+DROP TABLE IF EXISTS "Categories";
+CREATE TABLE IF NOT EXISTS "Categories" (
+    "category_id" INTEGER PRIMARY KEY,
+    "category_name" TEXT NOT NULL UNIQUE
 );
 
 
@@ -93,6 +97,15 @@ VALUES
     ('Compound'), 
     ('Longbow'),
     ('Recurve');
+
+
+INSERT INTO "Categories" ("category_name")
+VALUES 
+    ('Male'), 
+    ('Male U21'), 
+    ('Female'),
+    ('Female U21');
+
 
 INSERT INTO "Classifications" ("classification_string")
 VALUES
