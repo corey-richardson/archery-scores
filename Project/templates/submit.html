@@ -8,6 +8,10 @@
 
 <h2>Submit a new score to the Records Officer.</h2> <br>
 
+{% for k, round in rounds.items() %}
+    <p>{{r}}</p>
+{% endfor %}
+
 <form action="/submit" method="post">
     <div class="row mb-3">
         <div class="col">
@@ -32,8 +36,8 @@
         <div class="col">
             <select class="form-select mx-auto w-auto" name="round" required>
                 <option selected disabled hidden>Round Name</option>
-                {% for round in rounds.values() %}
-                    <option value="{{ round.name }}">{{ round.name }}</option>
+                {% for key, round in rounds.items() %}
+                    <option value="{{ key }}">{{ round.name }}</option>
                 {% endfor %}
             </select>
         </div>

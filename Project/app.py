@@ -6,6 +6,8 @@ from flask_session import Session
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from archeryutils import load_rounds
+from archeryutils import handicaps as hc
+from archeryutils import classifications as class_func
 
 from helpers import login_required
 
@@ -115,18 +117,62 @@ def logout():
 @app.route("/submit", methods=["get","post"])
 @login_required
 def submit():
+    agb_outdoor_imperial = load_rounds.AGB_outdoor_metric
+    agb_outdoor_metric = load_rounds.AGB_outdoor_metric
+    agb_indoors = load_rounds.AGB_indoor
+    wa_indoors = load_rounds.WA_indoor
+    unofficial = load_rounds.misc
+    
+    all_round_objects = {**agb_indoors, **wa_indoors, **agb_outdoor_imperial, **agb_outdoor_metric, **unofficial}
+    
+    if request.method == "POST":
+        bowstyle = request.form.get("bowstyle")
+        category = request.form.get("category")
+        round_name = request.form.get("round")
+        date_shot = request.form.get("date_shot")
+        event_type = request.form.get("event_type")
+        event_name = request.form.get("event_name")
+        score = request.form.get("score")
+        hits = request.form.get("hits")
+        xs = request.form.get("xs")
+        tens = request.form.get("tens")
+        golds = request.form.get("golds")
+        notes = request.form.get("notes")
+                        
+        category = db.execute("SELECT category_name FROM Categories WHERE category_id = ?", category).fetchone()[0]
+        bowstyle = db.execute("SELECT bowstyle_name FROM Bowstyles WHERE bowstyle_id = ?", bowstyle).fetchone()[0]
+
+        sex = "male" if "Male" in category else "female"
+        age = "under 21" if "U21" in category else "adult"
+
+        round_handicap = int(hc.handicap_from_score(
+            int(score),
+            all_round_objects[round_name],
+            "AGB",
+            int_prec=True
+        ))
+        
+        print(round_handicap)
+        
+        round_classification = class_func.calculate_agb_indoor_classification(
+            int(score),
+            round_name,
+            bowstyle.lower(),
+            sex,
+            age
+        )
+        
+        print(round_classification)
+        
+        dozens = ...
+        cumulative_dozens = ...
+    
     today = date.today().strftime('%Y-%m-%d')
     
     user_defaults = db.execute(
         "SELECT default_bowstyle, default_category FROM Archer WHERE archer_id = ?", 
         str(session["user_id"])
     ).fetchone()
-    
-    agb_outdoor_imperial = load_rounds.AGB_outdoor_metric
-    agb_outdoor_metric = load_rounds.AGB_outdoor_metric
-    agb_indoors = load_rounds.AGB_indoor
-    wa_indoors = load_rounds.WA_indoor
-    unofficial = load_rounds.misc
     
     bowstyles = db.execute(
         "SELECT * FROM Bowstyles"
@@ -140,10 +186,10 @@ def submit():
         "SELECT * FROM EventType"
     ).fetchall()
     
-    rounds = {**agb_indoors, **wa_indoors, **agb_outdoor_imperial, **agb_outdoor_metric, **unofficial}
+    
     
     return render_template("submit.html", 
-                           rounds=rounds, 
+                           rounds=all_round_objects, 
                            today=today,
                            bowstyles=bowstyles, categories=categories, event_types=event_types,
                            default_bowstyle=user_defaults[0], default_category=user_defaults[1])

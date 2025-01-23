@@ -132,12 +132,12 @@ VALUES
 
 INSERT INTO "Classifications" ("classification_string")
 VALUES
-    ('Indoor Archer 3rd Class'),
-    ('Indoor Archer 2nd Class'),
-    ('Indoor Archer 1st Class'),
-    ('Indoor Bowman 3rd Class'),
-    ('Indoor Bowman 2nd Class'),
-    ('Indoor Bowman 1st Class'),
-    ('Indoor Master Bowman'),
-    ('Indoor Grand Master Bowman');
+    ('I-A3'),
+    ('I-A2'),
+    ('I-A1'),
+    ('I-B3'),
+    ('I-B2'),
+    ('I-B1'),
+    ('I-MB'),
+    ('I-GMB');
     -- OUTDOOR CLASSIFICATIONS
